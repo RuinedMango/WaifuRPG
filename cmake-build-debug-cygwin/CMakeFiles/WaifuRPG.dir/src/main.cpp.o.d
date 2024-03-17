@@ -199,33 +199,21 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: \
  /usr/include/w32api/mcx.h /usr/include/w32api/imm.h \
  /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vulkan_win32.h \
  /usr/include/w32api/GL/gl.h \
- /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/GLFW/include/GLFW/glfw3native.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iostream \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ostream \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ios \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iosfwd \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stringfwd.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/memoryfwd.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/postypes.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cwchar /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/exception \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception_ptr.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception_defines.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_init_exception.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/typeinfo \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hash_bytes.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/new \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cstdint \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/limits \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/algorithm \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/utility \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_relops.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_pair.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/move.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/type_traits \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/nested_exception.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/char_traits.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/initializer_list \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_algobase.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/functexcept.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception_defines.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cpp_type_traits.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/type_traits.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/numeric_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_pair.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_types.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_funcs.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/concept_check.h \
@@ -234,7 +222,60 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ptr_traits.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/debug/debug.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/predefined_ops.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cstdint \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_algo.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/algorithmfwd.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_heap.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tempbuf.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_construct.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/new \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uniform_int_dist.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/glue_algorithm_defs.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/functional \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_function.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/backward/binders.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/tuple \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/array \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/range_access.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uses_allocator.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/invoke.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/functional_hash.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hash_bytes.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/refwrap.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/std_function.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/typeinfo \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/unordered_map \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/allocator.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/x86_64-pc-cygwin/bits/c++allocator.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/new_allocator.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/memoryfwd.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/alloc_traits.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/alloc_traits.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/aligned_buffer.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable_policy.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/enable_special_members.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/node_handle.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/unordered_map.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/erase_if.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/vector \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_uninitialized.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_vector.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_bvector.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/vector.tcc \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/execution_defs.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iostream \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ostream \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ios \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iosfwd \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stringfwd.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/postypes.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cwchar /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/exception \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception_ptr.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_init_exception.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/nested_exception.h \
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/char_traits.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/localefwd.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/x86_64-pc-cygwin/bits/c++locale.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/clocale \
@@ -260,21 +301,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/x86_64-pc-cygwin/bits/atomic_word.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/locale_classes.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/string \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/allocator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/x86_64-pc-cygwin/bits/c++allocator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/new_allocator.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ostream_insert.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_forced.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_function.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/backward/binders.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/range_access.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/initializer_list \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/basic_string.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/alloc_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/alloc_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_construct.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/string_view \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/functional_hash.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/string_view.tcc \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/string_conversions.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cstdio /usr/include/stdio.h \
@@ -301,19 +331,8 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/istream \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/istream.tcc \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cstring \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/vector \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_uninitialized.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_vector.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_bvector.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/vector.tcc \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/optional \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/utility \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_relops.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/enable_special_members.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/set \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tree.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/aligned_buffer.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/node_handle.h \
  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_set.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_multiset.h \
- /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/erase_if.h
+ /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_multiset.h

@@ -3,7 +3,6 @@
 
 CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/src/main.cpp \
   /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/GLFW/include/GLFW/glfw3.h \
-  /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/GLFW/include/GLFW/glfw3native.h \
   /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vk_video/vulkan_video_codec_h264std.h \
   /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vk_video/vulkan_video_codec_h264std_decode.h \
   /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vk_video/vulkan_video_codec_h264std_encode.h \
@@ -245,7 +244,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/avxvnniintrin.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/bmi2intrin.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/bmiintrin.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/algorithm \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/array \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/backward/binders.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/algorithmfwd.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/alloc_traits.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/allocator.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/basic_ios.h \
@@ -266,6 +268,9 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/functexcept.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/functional_hash.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hash_bytes.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable_policy.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/invoke.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ios_base.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/istream.tcc \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/locale_classes.h \
@@ -283,11 +288,15 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/predefined_ops.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ptr_traits.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/range_access.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/refwrap.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/std_abs.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/std_function.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_algo.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_algobase.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_bvector.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_construct.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_function.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_heap.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_funcs.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_types.h \
@@ -295,6 +304,7 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_pair.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_relops.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_set.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tempbuf.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tree.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_uninitialized.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_vector.h \
@@ -302,6 +312,9 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/streambuf_iterator.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/string_view.tcc \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stringfwd.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uniform_int_dist.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/unordered_map.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uses_allocator.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/vector.tcc \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cctype \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cerrno \
@@ -322,14 +335,18 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/numeric_traits.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/string_conversions.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/type_traits.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/functional \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/initializer_list \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ios \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iosfwd \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iostream \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/istream \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/limits \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/new \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/optional \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ostream \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/execution_defs.h \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/glue_algorithm_defs.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/pstl_config.h \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/set \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/stdexcept \
@@ -338,8 +355,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/string \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/string_view \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/system_error \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/tuple \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/type_traits \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/typeinfo \
+  /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/unordered_map \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/utility \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/vector \
   /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/x86_64-pc-cygwin/bits/atomic_word.h \
@@ -499,6 +518,8 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/type_traits:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/tuple:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/system_error:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/string:
@@ -507,11 +528,17 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/pstl_config.h:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/glue_algorithm_defs.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/pstl/execution_defs.h:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/optional:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/iosfwd:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ios:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/functional:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/ext/string_conversions.h:
 
@@ -547,9 +574,15 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/vector.tcc:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/unordered_map.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uniform_int_dist.h:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/xtestintrin.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/cwchar:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/uses_allocator.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/string_view.tcc:
 
@@ -559,11 +592,11 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tree.h:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_tempbuf.h:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_set.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_relops.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_pair.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_funcs.h:
 
@@ -573,7 +606,15 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_bvector.h:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_algo.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_pair.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/std_function.h:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/std_abs.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/refwrap.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/predefined_ops.h:
 
@@ -605,6 +646,8 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/locale_classes.h:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/invoke.h:
+
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_multiset.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hash_bytes.h:
@@ -614,6 +657,16 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/exception_defines.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/erase_if.h:
+
+/usr/include/w32api/oaidl.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/rdseedintrin.h:
+
+/usr/include/w32api/GL/gl.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/new:
+
+/usr/include/cygwin/signal.h:
 
 /usr/include/w32api/ncrypt.h:
 
@@ -642,6 +695,12 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512vlintrin.h:
 
 /usr/include/w32api/ioapiset.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ios_base.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_init_exception.h:
+
+/usr/include/w32api/heapapi.h:
 
 /usr/include/w32api/psdk_inc/intrin-impl.h:
 
@@ -713,16 +772,6 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/w32api/winuser.h:
 
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/rdseedintrin.h:
-
-/usr/include/w32api/GL/gl.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/new:
-
-/usr/include/cygwin/signal.h:
-
-/usr/include/w32api/oaidl.h:
-
 /usr/include/sys/sysmacros.h:
 
 /usr/include/sys/select.h:
@@ -773,8 +822,6 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/sys/signal.h:
 
-/cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/GLFW/include/GLFW/glfw3native.h:
-
 /usr/include/cygwin/config.h:
 
 /usr/include/_ansi.h:
@@ -782,6 +829,8 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/include/w32api/nb30.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512vnniintrin.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/unordered_map:
 
 /usr/include/bits/wordsize.h:
 
@@ -827,26 +876,6 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vk_video/vulkan_video_codec_h264std.h:
 
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/lwpintrin.h:
-
-/usr/include/bits/byteswap.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/set:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_types.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/avxvnniintrin.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/hresetintrin.h:
-
-/usr/include/machine/_endian.h:
-
-/usr/include/w32api/basetsd.h:
-
-/usr/include/cygwin/time.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512ifmaintrin.h:
-
 /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vulkan.h:
 
 /usr/include/w32api/rpcdcep.h:
@@ -864,10 +893,6 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/include/w32api/threadpoolapiset.h:
 
 /usr/include/w32api/guiddef.h:
-
-/cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vulkan_win32.h:
-
-/usr/include/w32api/mmsystem.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512vlbwintrin.h:
 
@@ -889,19 +914,25 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/w32api/apiset.h:
 
+/usr/include/w32api/mmsystem.h:
+
+/cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vulkan_win32.h:
+
+/usr/include/w32api/basetsd.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/hresetintrin.h:
+
+/usr/include/machine/_endian.h:
+
 /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vulkan_core.h:
-
-/usr/include/w32api/bcrypt.h:
-
-/usr/include/stdio.h:
-
-/usr/include/w32api/winperf.h:
-
-/usr/include/sys/_sigset.h:
 
 /usr/include/machine/_default_types.h:
 
 /usr/include/w32api/rpcsal.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/algorithm:
 
 /usr/include/string.h:
 
@@ -911,15 +942,35 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/w32api/libloaderapi.h:
 
-/usr/include/sys/string.h:
+/usr/include/w32api/bcrypt.h:
 
 /usr/include/w32api/sysinfoapi.h:
+
+/usr/include/sys/string.h:
+
+/usr/include/stdio.h:
+
+/usr/include/w32api/winperf.h:
+
+/usr/include/sys/_sigset.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/range_access.h:
 
 /usr/include/w32api/errhandlingapi.h:
 
 /cygdrive/c/Users/Ruinedmango/CLionProjects/WaifuRPG/Vulkan/Include/vulkan/vk_platform.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/lwpintrin.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/set:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_iterator_base_types.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/avxvnniintrin.h:
+
+/usr/include/cygwin/time.h:
 
 /usr/include/w32api/interlockedapi.h:
 
@@ -958,6 +1009,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/stddef.h:
 
 /usr/include/sched.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512ifmaintrin.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/array:
 
 /usr/include/w32api/commdlg.h:
 
@@ -1051,12 +1106,6 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/w32api/processenv.h:
 
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ios_base.h:
-
-/usr/include/w32api/heapapi.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_init_exception.h:
-
 /usr/include/w32api/processtopologyapi.h:
 
 /usr/include/w32api/winscard.h:
@@ -1101,6 +1150,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512fintrin.h:
 
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_forced.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/basic_string.h:
+
 /usr/include/w32api/rpcndr.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/ptr_traits.h:
@@ -1135,13 +1188,11 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 
 /usr/include/w32api/timezoneapi.h:
 
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/basic_string.h:
-
-/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/cxxabi_forced.h:
-
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/typeinfo:
 
 /usr/include/w32api/utilapiset.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/hashtable_policy.h:
 
 /usr/include/w32api/virtdisk.h:
 
@@ -1166,6 +1217,8 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx2intrin.h:
 
 /usr/include/w32api/wnnc.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/stl_heap.h:
 
 /usr/include/wchar.h:
 
@@ -1206,6 +1259,10 @@ CMakeFiles/WaifuRPG.dir/src/main.cpp.o: /cygdrive/c/Users/Ruinedmango/CLionProje
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/avx512vldqintrin.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/backward/binders.h:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/limits:
+
+/usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/algorithmfwd.h:
 
 /usr/lib/gcc/x86_64-pc-cygwin/11/include/c++/bits/alloc_traits.h:
 
