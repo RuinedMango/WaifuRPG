@@ -8,11 +8,11 @@ set( GLFW-CMAKE-STARTER-SRC
         src/main.cpp
 )
 
-include_directories(GLFW/include)
-include_directories(OpenAL/include)
+include_directories(libs/GLFW/include)
+include_directories(libs/OpenAL/include)
 find_package(Vulkan REQUIRED)
-add_subdirectory(GLFW)
-add_subdirectory(OpenAL)
+add_subdirectory(libs/GLFW)
+add_subdirectory(libs/OpenAL)
 add_executable(WaifuRPG src/main.cpp)
 target_link_libraries(WaifuRPG Vulkan::Vulkan)
 target_link_libraries(WaifuRPG glfw)
