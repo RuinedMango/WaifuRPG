@@ -1,12 +1,19 @@
 cmake_minimum_required(VERSION 3.9.1)
 project(WaifuRPG)
+
+set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
+set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
+
+set( GLFW-CMAKE-STARTER-SRC
+        src/main.cpp
+)
+
 include_directories(GLFW/include)
-include_directories(Vulkan/Include)
 include_directories(OpenAL/include)
-link_directories(OpenAL/libs/Win64)
-link_directories(Vulkan/Lib)
-link_directories(GLFW/lib-vc2022)
+find_package(Vulkan REQUIRED)
+add_subdirectory(GLFW)
+add_subdirectory(OpenAL)
 add_executable(WaifuRPG src/main.cpp)
-target_link_libraries(WaifuRPG glfw3dll)
-target_link_libraries(WaifuRPG vulkan-1)
-target_link_libraries(WaifuRPG glfw3dll)
+target_link_libraries(WaifuRPG Vulkan::Vulkan)
+target_link_libraries(WaifuRPG glfw)
+target_link_libraries(WaifuRPG OpenAL)
