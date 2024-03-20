@@ -15,7 +15,9 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [main]
+    paths-ignore:
+    - 'libs/**'
   schedule:
     - cron: '33 20 * * 6'
 
