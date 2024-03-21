@@ -63,7 +63,7 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
-class HelloTriangleApplication {
+class Application {
 public:
     void run() {
         initWindow();
@@ -889,7 +889,7 @@ private:
 };
 
 int main() {
-    HelloTriangleApplication app;
+    Application app;
 
     try {
         app.run();
