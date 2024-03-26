@@ -14,7 +14,6 @@
 
 #include "albit.h"
 #include "core/logging.h"
-#include "aloptional.h"
 #endif
 
 #include "atomic.h"
@@ -25,10 +24,12 @@ namespace al {
 
 backend_exception::backend_exception(backend_error code, const char *msg, ...) : mErrorCode{code}
 {
+    /* NOLINTBEGIN(*-array-to-pointer-decay) */
     std::va_list args;
     va_start(args, msg);
     setMessage(msg, args);
     va_end(args);
+    /* NOLINTEND(*-array-to-pointer-decay) */
 }
 backend_exception::~backend_exception() = default;
 
@@ -38,7 +39,7 @@ backend_exception::~backend_exception() = default;
 bool BackendBase::reset()
 { throw al::backend_exception{al::backend_error::DeviceError, "Invalid BackendBase call"}; }
 
-void BackendBase::captureSamples(al::byte*, uint)
+void BackendBase::captureSamples(std::byte*, uint)
 { }
 
 uint BackendBase::availableSamples()
@@ -46,27 +47,26 @@ uint BackendBase::availableSamples()
 
 ClockLatency BackendBase::getClockLatency()
 {
-    ClockLatency ret;
+    ClockLatency ret{};
 
     uint refcount;
     do {
         refcount = mDevice->waitForMix();
-        ret.ClockTime = GetDeviceClockTime(mDevice);
+        ret.ClockTime = mDevice->getClockTime();
         std::atomic_thread_fence(std::memory_order_acquire);
-    } while(refcount != ReadRef(mDevice->MixCount));
+    } while(refcount != mDevice->mMixCount.load(std::memory_order_relaxed));
 
     /* NOTE: The device will generally have about all but one periods filled at
      * any given time during playback. Without a more accurate measurement from
      * the output, this is an okay approximation.
      */
-    ret.Latency = std::max(std::chrono::seconds{mDevice->BufferSize-mDevice->UpdateSize},
-        std::chrono::seconds::zero());
+    ret.Latency = std::chrono::seconds{mDevice->BufferSize - mDevice->UpdateSize};
     ret.Latency /= mDevice->Frequency;
 
     return ret;
 }
 
-void BackendBase::setDefaultWFXChannelOrder()
+void BackendBase::setDefaultWFXChannelOrder() const
 {
     mDevice->RealOut.ChannelIndex.fill(InvalidChannelIndex);
 
@@ -141,7 +141,7 @@ void BackendBase::setDefaultWFXChannelOrder()
     }
 }
 
-void BackendBase::setDefaultChannelOrder()
+void BackendBase::setDefaultChannelOrder() const
 {
     mDevice->RealOut.ChannelIndex.fill(InvalidChannelIndex);
 

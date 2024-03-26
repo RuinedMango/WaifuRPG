@@ -1,11 +1,17 @@
 #ifndef ALC_CONTEXT_H
 #define ALC_CONTEXT_H
 
+#include <array>
 #include <atomic>
+#include <deque>
 #include <memory>
 #include <mutex>
 #include <stdint.h>
+#include <string>
+#include <string_view>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include "AL/al.h"
 #include "AL/alc.h"
@@ -14,10 +20,11 @@
 #include "al/listener.h"
 #include "almalloc.h"
 #include "alnumeric.h"
+#include "althreads.h"
 #include "atomic.h"
 #include "core/context.h"
+#include "inprogext.h"
 #include "intrusive_ptr.h"
-#include "vector.h"
 
 #ifdef ALSOFT_EAX
 #include "al/eax/call.h"
@@ -30,40 +37,40 @@
 struct ALeffect;
 struct ALeffectslot;
 struct ALsource;
+struct DebugGroup;
+struct EffectSlotSubList;
+struct SourceSubList;
+
+enum class DebugSource : uint8_t;
+enum class DebugType : uint8_t;
+enum class DebugSeverity : uint8_t;
 
 using uint = unsigned int;
 
 
-struct SourceSubList {
-    uint64_t FreeMask{~0_u64};
-    ALsource *Sources{nullptr}; /* 64 */
+enum ContextFlags {
+    DebugBit = 0, /* ALC_CONTEXT_DEBUG_BIT_EXT */
+};
+using ContextFlagBitset = std::bitset<sizeof(ALuint)*8>;
 
-    SourceSubList() noexcept = default;
-    SourceSubList(const SourceSubList&) = delete;
-    SourceSubList(SourceSubList&& rhs) noexcept : FreeMask{rhs.FreeMask}, Sources{rhs.Sources}
-    { rhs.FreeMask = ~0_u64; rhs.Sources = nullptr; }
-    ~SourceSubList();
 
-    SourceSubList& operator=(const SourceSubList&) = delete;
-    SourceSubList& operator=(SourceSubList&& rhs) noexcept
-    { std::swap(FreeMask, rhs.FreeMask); std::swap(Sources, rhs.Sources); return *this; }
+struct DebugLogEntry {
+    const DebugSource mSource;
+    const DebugType mType;
+    const DebugSeverity mSeverity;
+    const uint mId;
+
+    std::string mMessage;
+
+    template<typename T>
+    DebugLogEntry(DebugSource source, DebugType type, uint id, DebugSeverity severity, T&& message)
+        : mSource{source}, mType{type}, mSeverity{severity}, mId{id}
+        , mMessage{std::forward<T>(message)}
+    { }
+    DebugLogEntry(const DebugLogEntry&) = default;
+    DebugLogEntry(DebugLogEntry&&) = default;
 };
 
-struct EffectSlotSubList {
-    uint64_t FreeMask{~0_u64};
-    ALeffectslot *EffectSlots{nullptr}; /* 64 */
-
-    EffectSlotSubList() noexcept = default;
-    EffectSlotSubList(const EffectSlotSubList&) = delete;
-    EffectSlotSubList(EffectSlotSubList&& rhs) noexcept
-      : FreeMask{rhs.FreeMask}, EffectSlots{rhs.EffectSlots}
-    { rhs.FreeMask = ~0_u64; rhs.EffectSlots = nullptr; }
-    ~EffectSlotSubList();
-
-    EffectSlotSubList& operator=(const EffectSlotSubList&) = delete;
-    EffectSlotSubList& operator=(EffectSlotSubList&& rhs) noexcept
-    { std::swap(FreeMask, rhs.FreeMask); std::swap(EffectSlots, rhs.EffectSlots); return *this; }
-};
 
 struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
     const al::intrusive_ptr<ALCdevice> mALDevice;
@@ -74,7 +81,10 @@ struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
 
     std::mutex mPropLock;
 
-    std::atomic<ALenum> mLastError{AL_NO_ERROR};
+    al::tss<ALenum> mLastThreadError{AL_NO_ERROR};
+
+    const ContextFlagBitset mContextFlags;
+    std::atomic<bool> mDebugEnabled{false};
 
     DistanceModel mDistanceModel{DistanceModel::Default};
     bool mSourceDistanceModel{false};
@@ -88,25 +98,32 @@ struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
     ALEVENTPROCSOFT mEventCb{};
     void *mEventParam{nullptr};
 
+    std::mutex mDebugCbLock;
+    ALDEBUGPROCEXT mDebugCb{};
+    void *mDebugParam{nullptr};
+    std::vector<DebugGroup> mDebugGroups;
+    std::deque<DebugLogEntry> mDebugLog;
+
     ALlistener mListener{};
 
-    al::vector<SourceSubList> mSourceList;
+    std::vector<SourceSubList> mSourceList;
     ALuint mNumSources{0};
     std::mutex mSourceLock;
 
-    al::vector<EffectSlotSubList> mEffectSlotList;
+    std::vector<EffectSlotSubList> mEffectSlotList;
     ALuint mNumEffectSlots{0u};
     std::mutex mEffectSlotLock;
 
     /* Default effect slot */
     std::unique_ptr<ALeffectslot> mDefaultSlot;
 
-    const char *mExtensionList{nullptr};
+    std::vector<std::string_view> mExtensions;
+    std::string mExtensionsString{};
 
-    std::string mExtensionListOverride{};
+    std::unordered_map<ALuint,std::string> mSourceNames;
+    std::unordered_map<ALuint,std::string> mEffectSlotNames;
 
-
-    ALCcontext(al::intrusive_ptr<ALCdevice> device);
+    ALCcontext(al::intrusive_ptr<ALCdevice> device, ContextFlagBitset flags);
     ALCcontext(const ALCcontext&) = delete;
     ALCcontext& operator=(const ALCcontext&) = delete;
     ~ALCcontext();
@@ -114,10 +131,10 @@ struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
     void init();
     /**
      * Removes the context from its device and removes it from being current on
-     * the running thread or globally. Returns true if other contexts still
-     * exist on the device.
+     * the running thread or globally. Stops device playback if this was the
+     * last context on its device.
      */
-    bool deinit();
+    void deinit();
 
     /**
      * Defers/suspends updates for the given context's listener and sources.
@@ -142,12 +159,24 @@ struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
      */
     void applyAllUpdates();
 
-#ifdef __USE_MINGW_ANSI_STDIO
-    [[gnu::format(gnu_printf, 3, 4)]]
+#ifdef __MINGW32__
+    [[gnu::format(__MINGW_PRINTF_FORMAT, 3, 4)]]
 #else
     [[gnu::format(printf, 3, 4)]]
 #endif
     void setError(ALenum errorCode, const char *msg, ...);
+
+    void sendDebugMessage(std::unique_lock<std::mutex> &debuglock, DebugSource source,
+        DebugType type, ALuint id, DebugSeverity severity, std::string_view message);
+
+    void debugMessage(DebugSource source, DebugType type, ALuint id, DebugSeverity severity,
+        std::string_view message)
+    {
+        if(!mDebugEnabled.load(std::memory_order_relaxed)) LIKELY
+            return;
+        std::unique_lock<std::mutex> debuglock{mDebugCbLock};
+        sendDebugMessage(debuglock, source, type, id, severity, message);
+    }
 
     /* Process-wide current context */
     static std::atomic<bool> sGlobalContextLock;
@@ -155,7 +184,7 @@ struct ALCcontext : public al::intrusive_ref<ALCcontext>, ContextBase {
 
 private:
     /* Thread-local current context. */
-    static thread_local ALCcontext *sLocalContext;
+    static inline thread_local ALCcontext *sLocalContext{};
 
     /* Thread-local context handling. This handles attempting to release the
      * context which may have been left current when the thread is destroyed.
@@ -163,30 +192,25 @@ private:
     class ThreadCtx {
     public:
         ~ThreadCtx();
+        /* NOLINTBEGIN(readability-convert-member-functions-to-static)
+         * This should be non-static to invoke construction of the thread-local
+         * sThreadContext, so that it's destructor gets run at thread exit to
+         * clear sLocalContext (which isn't a member variable to make read
+         * access efficient).
+         */
         void set(ALCcontext *ctx) const noexcept { sLocalContext = ctx; }
+        /* NOLINTEND(readability-convert-member-functions-to-static) */
     };
     static thread_local ThreadCtx sThreadContext;
 
 public:
-    /* HACK: MinGW generates bad code when accessing an extern thread_local
-     * object. Add a wrapper function for it that only accesses it where it's
-     * defined.
-     */
-#ifdef __MINGW32__
-    static ALCcontext *getThreadContext() noexcept;
-    static void setThreadContext(ALCcontext *context) noexcept;
-#else
     static ALCcontext *getThreadContext() noexcept { return sLocalContext; }
     static void setThreadContext(ALCcontext *context) noexcept { sThreadContext.set(context); }
-#endif
 
     /* Default effect that applies to sources that don't have an effect on send 0. */
     static ALeffect sDefaultEffect;
 
-    DEF_NEWDEL(ALCcontext)
-
 #ifdef ALSOFT_EAX
-public:
     bool hasEax() const noexcept { return mEaxIsInitialized; }
     bool eaxIsCapable() const noexcept;
 
@@ -430,7 +454,7 @@ private:
         typename TMemberResult,
         typename TProps,
         typename TState>
-    void eax_defer(const EaxCall& call, TState& state, TMemberResult TProps::*member) noexcept
+    void eax_defer(const EaxCall& call, TState& state, TMemberResult TProps::*member)
     {
         const auto& src = call.get_value<ContextException, const TMemberResult>();
         TValidator{}(src);
@@ -513,28 +537,20 @@ private:
 
 using ContextRef = al::intrusive_ptr<ALCcontext>;
 
-ContextRef GetContextRef(void);
+ContextRef GetContextRef() noexcept;
 
 void UpdateContextProps(ALCcontext *context);
 
 
-extern bool TrapALError;
+inline bool TrapALError{false};
 
 
 #ifdef ALSOFT_EAX
-ALenum AL_APIENTRY EAXSet(
-    const GUID* property_set_id,
-    ALuint property_id,
-    ALuint property_source_id,
-    ALvoid* property_value,
-    ALuint property_value_size) noexcept;
+auto AL_APIENTRY EAXSet(const GUID *property_set_id, ALuint property_id,
+    ALuint source_id, ALvoid *value, ALuint value_size) noexcept -> ALenum;
 
-ALenum AL_APIENTRY EAXGet(
-    const GUID* property_set_id,
-    ALuint property_id,
-    ALuint property_source_id,
-    ALvoid* property_value,
-    ALuint property_value_size) noexcept;
+auto AL_APIENTRY EAXGet(const GUID *property_set_id, ALuint property_id,
+    ALuint source_id, ALvoid *value, ALuint value_size) noexcept -> ALenum;
 #endif // ALSOFT_EAX
 
 #endif /* ALC_CONTEXT_H */

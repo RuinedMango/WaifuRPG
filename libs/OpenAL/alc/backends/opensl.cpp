@@ -23,23 +23,26 @@
 
 #include "opensl.h"
 
-#include <stdlib.h>
 #include <jni.h>
 
-#include <new>
 #include <array>
+#include <cstdlib>
 #include <cstring>
+#include <mutex>
+#include <new>
 #include <thread>
 #include <functional>
 
 #include "albit.h"
 #include "alnumeric.h"
+#include "alsem.h"
+#include "alstring.h"
+#include "althrd_setname.h"
 #include "core/device.h"
 #include "core/helpers.h"
 #include "core/logging.h"
 #include "opthelpers.h"
 #include "ringbuffer.h"
-#include "threads.h"
 
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
@@ -48,15 +51,17 @@
 
 namespace {
 
+using namespace std::string_view_literals;
+
 /* Helper macros */
 #define EXTRACT_VCALL_ARGS(...)  __VA_ARGS__))
 #define VCALL(obj, func)  ((*(obj))->func((obj), EXTRACT_VCALL_ARGS
 #define VCALL0(obj, func)  ((*(obj))->func((obj) EXTRACT_VCALL_ARGS
 
 
-constexpr char opensl_device[] = "OpenSL";
+[[nodiscard]] constexpr auto GetDeviceName() noexcept { return "OpenSL"sv; }
 
-
+[[nodiscard]]
 constexpr SLuint32 GetChannelMask(DevFmtChannels chans) noexcept
 {
     switch(chans)
@@ -159,12 +164,10 @@ struct OpenSLPlayback final : public BackendBase {
     ~OpenSLPlayback() override;
 
     void process(SLAndroidSimpleBufferQueueItf bq) noexcept;
-    static void processC(SLAndroidSimpleBufferQueueItf bq, void *context) noexcept
-    { static_cast<OpenSLPlayback*>(context)->process(bq); }
 
     int mixerProc();
 
-    void open(const char *name) override;
+    void open(std::string_view name) override;
     bool reset() override;
     void start() override;
     void stop() override;
@@ -189,8 +192,6 @@ struct OpenSLPlayback final : public BackendBase {
 
     std::atomic<bool> mKillNow{true};
     std::thread mThread;
-
-    DEF_NEWDEL(OpenSLPlayback)
 };
 
 OpenSLPlayback::~OpenSLPlayback()
@@ -229,7 +230,7 @@ void OpenSLPlayback::process(SLAndroidSimpleBufferQueueItf) noexcept
 int OpenSLPlayback::mixerProc()
 {
     SetRTPriority();
-    althrd_setname(MIXER_THREAD_NAME);
+    althrd_setname(GetMixerThreadName());
 
     SLPlayItf player;
     SLAndroidSimpleBufferQueueItf bufferQueue;
@@ -312,13 +313,13 @@ int OpenSLPlayback::mixerProc()
 }
 
 
-void OpenSLPlayback::open(const char *name)
+void OpenSLPlayback::open(std::string_view name)
 {
-    if(!name)
-        name = opensl_device;
-    else if(strcmp(name, opensl_device) != 0)
-        throw al::backend_exception{al::backend_error::NoDevice, "Device name \"%s\" not found",
-            name};
+    if(name.empty())
+        name = GetDeviceName();
+    else if(name != GetDeviceName())
+        throw al::backend_exception{al::backend_error::NoDevice, "Device name \"%.*s\" not found",
+            al::sizei(name), name.data()};
 
     /* There's only one device, so if it's already open, there's nothing to do. */
     if(mEngineObj) return;
@@ -374,74 +375,6 @@ bool OpenSLPlayback::reset()
     mBufferQueueObj = nullptr;
 
     mRing = nullptr;
-
-#if 0
-    if(!mDevice->Flags.get<FrequencyRequest>())
-    {
-        /* FIXME: Disabled until I figure out how to get the Context needed for
-         * the getSystemService call.
-         */
-        JNIEnv *env = Android_GetJNIEnv();
-        jobject jctx = Android_GetContext();
-
-        /* Get necessary stuff for using java.lang.Integer,
-         * android.content.Context, and android.media.AudioManager.
-         */
-        jclass int_cls = JCALL(env,FindClass)("java/lang/Integer");
-        jmethodID int_parseint = JCALL(env,GetStaticMethodID)(int_cls,
-            "parseInt", "(Ljava/lang/String;)I"
-        );
-        TRACE("Integer: %p, parseInt: %p\n", int_cls, int_parseint);
-
-        jclass ctx_cls = JCALL(env,FindClass)("android/content/Context");
-        jfieldID ctx_audsvc = JCALL(env,GetStaticFieldID)(ctx_cls,
-            "AUDIO_SERVICE", "Ljava/lang/String;"
-        );
-        jmethodID ctx_getSysSvc = JCALL(env,GetMethodID)(ctx_cls,
-            "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;"
-        );
-        TRACE("Context: %p, AUDIO_SERVICE: %p, getSystemService: %p\n",
-              ctx_cls, ctx_audsvc, ctx_getSysSvc);
-
-        jclass audmgr_cls = JCALL(env,FindClass)("android/media/AudioManager");
-        jfieldID audmgr_prop_out_srate = JCALL(env,GetStaticFieldID)(audmgr_cls,
-            "PROPERTY_OUTPUT_SAMPLE_RATE", "Ljava/lang/String;"
-        );
-        jmethodID audmgr_getproperty = JCALL(env,GetMethodID)(audmgr_cls,
-            "getProperty", "(Ljava/lang/String;)Ljava/lang/String;"
-        );
-        TRACE("AudioManager: %p, PROPERTY_OUTPUT_SAMPLE_RATE: %p, getProperty: %p\n",
-              audmgr_cls, audmgr_prop_out_srate, audmgr_getproperty);
-
-        const char *strchars;
-        jstring strobj;
-
-        /* Now make the calls. */
-        //AudioManager audMgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        strobj = JCALL(env,GetStaticObjectField)(ctx_cls, ctx_audsvc);
-        jobject audMgr = JCALL(env,CallObjectMethod)(jctx, ctx_getSysSvc, strobj);
-        strchars = JCALL(env,GetStringUTFChars)(strobj, nullptr);
-        TRACE("Context.getSystemService(%s) = %p\n", strchars, audMgr);
-        JCALL(env,ReleaseStringUTFChars)(strobj, strchars);
-
-        //String srateStr = audMgr.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-        strobj = JCALL(env,GetStaticObjectField)(audmgr_cls, audmgr_prop_out_srate);
-        jstring srateStr = JCALL(env,CallObjectMethod)(audMgr, audmgr_getproperty, strobj);
-        strchars = JCALL(env,GetStringUTFChars)(strobj, nullptr);
-        TRACE("audMgr.getProperty(%s) = %p\n", strchars, srateStr);
-        JCALL(env,ReleaseStringUTFChars)(strobj, strchars);
-
-        //int sampleRate = Integer.parseInt(srateStr);
-        sampleRate = JCALL(env,CallStaticIntMethod)(int_cls, int_parseint, srateStr);
-
-        strchars = JCALL(env,GetStringUTFChars)(srateStr, nullptr);
-        TRACE("Got system sample rate %uhz (%s)\n", sampleRate, strchars);
-        JCALL(env,ReleaseStringUTFChars)(srateStr, strchars);
-
-        if(!sampleRate) sampleRate = device->Frequency;
-        else sampleRate = maxu(sampleRate, MIN_OUTPUT_RATE);
-    }
-#endif
 
     mDevice->FmtChans = DevFmtStereo;
     mDevice->FmtType = DevFmtShort;
@@ -564,7 +497,9 @@ void OpenSLPlayback::start()
     PrintErr(result, "bufferQueue->GetInterface");
     if(SL_RESULT_SUCCESS == result)
     {
-        result = VCALL(bufferQueue,RegisterCallback)(&OpenSLPlayback::processC, this);
+        result = VCALL(bufferQueue,RegisterCallback)(
+            [](SLAndroidSimpleBufferQueueItf bq, void *context) noexcept
+            { static_cast<OpenSLPlayback*>(context)->process(bq); }, this);
         PrintErr(result, "bufferQueue->RegisterCallback");
     }
     if(SL_RESULT_SUCCESS != result)
@@ -628,8 +563,8 @@ ClockLatency OpenSLPlayback::getClockLatency()
 {
     ClockLatency ret;
 
-    std::lock_guard<std::mutex> _{mMutex};
-    ret.ClockTime = GetDeviceClockTime(mDevice);
+    std::lock_guard<std::mutex> dlock{mMutex};
+    ret.ClockTime = mDevice->getClockTime();
     ret.Latency  = std::chrono::seconds{mRing->readSpace() * mDevice->UpdateSize};
     ret.Latency /= mDevice->Frequency;
 
@@ -642,13 +577,11 @@ struct OpenSLCapture final : public BackendBase {
     ~OpenSLCapture() override;
 
     void process(SLAndroidSimpleBufferQueueItf bq) noexcept;
-    static void processC(SLAndroidSimpleBufferQueueItf bq, void *context) noexcept
-    { static_cast<OpenSLCapture*>(context)->process(bq); }
 
-    void open(const char *name) override;
+    void open(std::string_view name) override;
     void start() override;
     void stop() override;
-    void captureSamples(al::byte *buffer, uint samples) override;
+    void captureSamples(std::byte *buffer, uint samples) override;
     uint availableSamples() override;
 
     /* engine interfaces */
@@ -662,8 +595,6 @@ struct OpenSLCapture final : public BackendBase {
     uint mSplOffset{0u};
 
     uint mFrameSize{0};
-
-    DEF_NEWDEL(OpenSLCapture)
 };
 
 OpenSLCapture::~OpenSLCapture()
@@ -686,13 +617,13 @@ void OpenSLCapture::process(SLAndroidSimpleBufferQueueItf) noexcept
 }
 
 
-void OpenSLCapture::open(const char* name)
+void OpenSLCapture::open(std::string_view name)
 {
-    if(!name)
-        name = opensl_device;
-    else if(strcmp(name, opensl_device) != 0)
-        throw al::backend_exception{al::backend_error::NoDevice, "Device name \"%s\" not found",
-            name};
+    if(name.empty())
+        name = GetDeviceName();
+    else if(name != GetDeviceName())
+        throw al::backend_exception{al::backend_error::NoDevice, "Device name \"%.*s\" not found",
+            al::sizei(name), name.data()};
 
     SLresult result{slCreateEngine(&mEngineObj, 0, nullptr, 0, nullptr, nullptr)};
     PrintErr(result, "slCreateEngine");
@@ -710,10 +641,10 @@ void OpenSLCapture::open(const char* name)
     {
         mFrameSize = mDevice->frameSizeFromFmt();
         /* Ensure the total length is at least 100ms */
-        uint length{maxu(mDevice->BufferSize, mDevice->Frequency/10)};
+        uint length{std::max(mDevice->BufferSize, mDevice->Frequency/10u)};
         /* Ensure the per-chunk length is at least 10ms, and no more than 50ms. */
-        uint update_len{clampu(mDevice->BufferSize/3, mDevice->Frequency/100,
-            mDevice->Frequency/100*5)};
+        uint update_len{std::clamp(mDevice->BufferSize/3u, mDevice->Frequency/100u,
+            mDevice->Frequency/100u*5u)};
         uint num_updates{(length+update_len-1) / update_len};
 
         mRing = RingBuffer::Create(num_updates, update_len*mFrameSize, false);
@@ -813,13 +744,15 @@ void OpenSLCapture::open(const char* name)
     }
     if(SL_RESULT_SUCCESS == result)
     {
-        result = VCALL(bufferQueue,RegisterCallback)(&OpenSLCapture::processC, this);
+        result = VCALL(bufferQueue,RegisterCallback)(
+            [](SLAndroidSimpleBufferQueueItf bq, void *context) noexcept
+            { static_cast<OpenSLCapture*>(context)->process(bq); }, this);
         PrintErr(result, "bufferQueue->RegisterCallback");
     }
     if(SL_RESULT_SUCCESS == result)
     {
         const uint chunk_size{mDevice->UpdateSize * mFrameSize};
-        const auto silence = (mDevice->FmtType == DevFmtUByte) ? al::byte{0x80} : al::byte{0};
+        const auto silence = (mDevice->FmtType == DevFmtUByte) ? std::byte{0x80} : std::byte{0};
 
         auto data = mRing->getWriteVector();
         std::fill_n(data.first.buf, data.first.len*chunk_size, silence);
@@ -883,7 +816,7 @@ void OpenSLCapture::stop()
     }
 }
 
-void OpenSLCapture::captureSamples(al::byte *buffer, uint samples)
+void OpenSLCapture::captureSamples(std::byte *buffer, uint samples)
 {
     const uint update_size{mDevice->UpdateSize};
     const uint chunk_size{update_size * mFrameSize};
@@ -895,7 +828,7 @@ void OpenSLCapture::captureSamples(al::byte *buffer, uint samples)
     auto rdata = mRing->getReadVector();
     for(uint i{0};i < samples;)
     {
-        const uint rem{minu(samples - i, update_size - mSplOffset)};
+        const uint rem{std::min(samples - i, update_size - mSplOffset)};
         std::copy_n(rdata.first.buf + mSplOffset*size_t{mFrameSize}, rem*size_t{mFrameSize},
             buffer + i*size_t{mFrameSize});
 
@@ -932,7 +865,7 @@ void OpenSLCapture::captureSamples(al::byte *buffer, uint samples)
         return;
 
     /* For each buffer chunk that was fully read, queue another writable buffer
-     * chunk to keep the OpenSL queue full. This is rather convulated, as a
+     * chunk to keep the OpenSL queue full. This is rather convoluted, as a
      * result of the ring buffer holding more elements than are writable at a
      * given time. The end of the write vector increments when the read pointer
      * advances, which will "expose" a previously unwritable element. So for
@@ -977,16 +910,14 @@ bool OSLBackendFactory::querySupport(BackendType type)
 
 std::string OSLBackendFactory::probe(BackendType type)
 {
-    std::string outnames;
     switch(type)
     {
     case BackendType::Playback:
     case BackendType::Capture:
-        /* Includes null char. */
-        outnames.append(opensl_device, sizeof(opensl_device));
-        break;
+        /* Include null char. */
+        return std::string{GetDeviceName()} + '\0';
     }
-    return outnames;
+    return std::string{};
 }
 
 BackendPtr OSLBackendFactory::createBackend(DeviceBase *device, BackendType type)

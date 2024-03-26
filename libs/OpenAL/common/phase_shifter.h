@@ -8,89 +8,54 @@
 #endif
 
 #include <array>
-#include <stddef.h>
+#include <cmath>
+#include <cstddef>
 
-#include "alcomplex.h"
+#include "alnumbers.h"
 #include "alspan.h"
 
+
+struct NoInit { };
 
 /* Implements a wide-band +90 degree phase-shift. Note that this should be
  * given one sample less of a delay (FilterSize/2 - 1) compared to the direct
  * signal delay (FilterSize/2) to properly align.
  */
-template<size_t FilterSize>
+template<std::size_t FilterSize>
 struct PhaseShifterT {
     static_assert(FilterSize >= 16, "FilterSize needs to be at least 16");
     static_assert((FilterSize&(FilterSize-1)) == 0, "FilterSize needs to be power-of-two");
 
     alignas(16) std::array<float,FilterSize/2> mCoeffs{};
 
-    /* Some notes on this filter construction.
-     *
-     * A wide-band phase-shift filter needs a delay to maintain linearity. A
-     * dirac impulse in the center of a time-domain buffer represents a filter
-     * passing all frequencies through as-is with a pure delay. Converting that
-     * to the frequency domain, adjusting the phase of each frequency bin by
-     * +90 degrees, then converting back to the time domain, results in a FIR
-     * filter that applies a +90 degree wide-band phase-shift.
-     *
-     * A particularly notable aspect of the time-domain filter response is that
-     * every other coefficient is 0. This allows doubling the effective size of
-     * the filter, by storing only the non-0 coefficients and double-stepping
-     * over the input to apply it.
-     *
-     * Additionally, the resulting filter is independent of the sample rate.
-     * The same filter can be applied regardless of the device's sample rate
-     * and achieve the same effect.
-     */
     PhaseShifterT()
     {
-        using complex_d = std::complex<double>;
-        constexpr size_t fft_size{FilterSize};
-        constexpr size_t half_size{fft_size / 2};
-
-        auto fftBuffer = std::make_unique<complex_d[]>(fft_size);
-        std::fill_n(fftBuffer.get(), fft_size, complex_d{});
-        fftBuffer[half_size] = 1.0;
-
-        forward_fft(al::as_span(fftBuffer.get(), fft_size));
-        for(size_t i{0};i < half_size+1;++i)
-            fftBuffer[i] = complex_d{-fftBuffer[i].imag(), fftBuffer[i].real()};
-        for(size_t i{half_size+1};i < fft_size;++i)
-            fftBuffer[i] = std::conj(fftBuffer[fft_size - i]);
-        inverse_fft(al::as_span(fftBuffer.get(), fft_size));
-
-        auto fftiter = fftBuffer.get() + half_size + (FilterSize/2 - 1);
-        for(float &coeff : mCoeffs)
+        /* Every other coefficient is 0, so we only need to calculate and store
+         * the non-0 terms and double-step over the input to apply it. The
+         * calculated coefficients are in reverse to make applying in the time-
+         * domain more efficient.
+         */
+        for(std::size_t i{0};i < FilterSize/2;++i)
         {
-            coeff = static_cast<float>(fftiter->real() / double{fft_size});
-            fftiter -= 2;
+            const int k{static_cast<int>(i*2 + 1) - int{FilterSize/2}};
+
+            /* Calculate the Blackman window value for this coefficient. */
+            const double w{2.0*al::numbers::pi * static_cast<double>(i*2 + 1)
+                / double{FilterSize}};
+            const double window{0.3635819 - 0.4891775*std::cos(w) + 0.1365995*std::cos(2.0*w)
+                - 0.0106411*std::cos(3.0*w)};
+
+            const double pk{al::numbers::pi * static_cast<double>(k)};
+            mCoeffs[i] = static_cast<float>(window * (1.0-std::cos(pk)) / pk);
         }
     }
+
+    PhaseShifterT(NoInit) { }
 
     void process(al::span<float> dst, const float *RESTRICT src) const;
 
 private:
 #if defined(HAVE_NEON)
-    /* There doesn't seem to be NEON intrinsics to do this kind of stipple
-     * shuffling, so there's two custom methods for it.
-     */
-    static auto shuffle_2020(float32x4_t a, float32x4_t b)
-    {
-        float32x4_t ret{vmovq_n_f32(vgetq_lane_f32(a, 0))};
-        ret = vsetq_lane_f32(vgetq_lane_f32(a, 2), ret, 1);
-        ret = vsetq_lane_f32(vgetq_lane_f32(b, 0), ret, 2);
-        ret = vsetq_lane_f32(vgetq_lane_f32(b, 2), ret, 3);
-        return ret;
-    }
-    static auto shuffle_3131(float32x4_t a, float32x4_t b)
-    {
-        float32x4_t ret{vmovq_n_f32(vgetq_lane_f32(a, 1))};
-        ret = vsetq_lane_f32(vgetq_lane_f32(a, 3), ret, 1);
-        ret = vsetq_lane_f32(vgetq_lane_f32(b, 1), ret, 2);
-        ret = vsetq_lane_f32(vgetq_lane_f32(b, 3), ret, 3);
-        return ret;
-    }
     static auto unpacklo(float32x4_t a, float32x4_t b)
     {
         float32x2x2_t result{vzip_f32(vget_low_f32(a), vget_low_f32(b))};
@@ -112,17 +77,17 @@ private:
 #endif
 };
 
-template<size_t S>
+template<std::size_t S>
 inline void PhaseShifterT<S>::process(al::span<float> dst, const float *RESTRICT src) const
 {
 #ifdef HAVE_SSE_INTRINSICS
-    if(size_t todo{dst.size()>>1})
+    if(std::size_t todo{dst.size()>>1})
     {
         auto *out = reinterpret_cast<__m64*>(dst.data());
         do {
             __m128 r04{_mm_setzero_ps()};
             __m128 r14{_mm_setzero_ps()};
-            for(size_t j{0};j < mCoeffs.size();j+=4)
+            for(std::size_t j{0};j < mCoeffs.size();j+=4)
             {
                 const __m128 coeffs{_mm_load_ps(&mCoeffs[j])};
                 const __m128 s0{_mm_loadu_ps(&src[j*2])};
@@ -146,7 +111,7 @@ inline void PhaseShifterT<S>::process(al::span<float> dst, const float *RESTRICT
     if((dst.size()&1))
     {
         __m128 r4{_mm_setzero_ps()};
-        for(size_t j{0};j < mCoeffs.size();j+=4)
+        for(std::size_t j{0};j < mCoeffs.size();j+=4)
         {
             const __m128 coeffs{_mm_load_ps(&mCoeffs[j])};
             const __m128 s{_mm_setr_ps(src[j*2], src[j*2 + 2], src[j*2 + 4], src[j*2 + 6])};
@@ -160,20 +125,21 @@ inline void PhaseShifterT<S>::process(al::span<float> dst, const float *RESTRICT
 
 #elif defined(HAVE_NEON)
 
-    size_t pos{0};
-    if(size_t todo{dst.size()>>1})
+    std::size_t pos{0};
+    if(std::size_t todo{dst.size()>>1})
     {
         do {
             float32x4_t r04{vdupq_n_f32(0.0f)};
             float32x4_t r14{vdupq_n_f32(0.0f)};
-            for(size_t j{0};j < mCoeffs.size();j+=4)
+            for(std::size_t j{0};j < mCoeffs.size();j+=4)
             {
                 const float32x4_t coeffs{vld1q_f32(&mCoeffs[j])};
                 const float32x4_t s0{vld1q_f32(&src[j*2])};
                 const float32x4_t s1{vld1q_f32(&src[j*2 + 4])};
+                const float32x4x2_t values{vuzpq_f32(s0, s1)};
 
-                r04 = vmlaq_f32(r04, shuffle_2020(s0, s1), coeffs);
-                r14 = vmlaq_f32(r14, shuffle_3131(s0, s1), coeffs);
+                r04 = vmlaq_f32(r04, values.val[0], coeffs);
+                r14 = vmlaq_f32(r14, values.val[1], coeffs);
             }
             src += 2;
 
@@ -187,7 +153,7 @@ inline void PhaseShifterT<S>::process(al::span<float> dst, const float *RESTRICT
     if((dst.size()&1))
     {
         float32x4_t r4{vdupq_n_f32(0.0f)};
-        for(size_t j{0};j < mCoeffs.size();j+=4)
+        for(std::size_t j{0};j < mCoeffs.size();j+=4)
         {
             const float32x4_t coeffs{vld1q_f32(&mCoeffs[j])};
             const float32x4_t s{load4(src[j*2], src[j*2 + 2], src[j*2 + 4], src[j*2 + 6])};
@@ -202,7 +168,7 @@ inline void PhaseShifterT<S>::process(al::span<float> dst, const float *RESTRICT
     for(float &output : dst)
     {
         float ret{0.0f};
-        for(size_t j{0};j < mCoeffs.size();++j)
+        for(std::size_t j{0};j < mCoeffs.size();++j)
             ret += src[j*2] * mCoeffs[j];
 
         output = ret;
