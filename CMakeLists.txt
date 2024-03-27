@@ -7,6 +7,7 @@ set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
 set( GLFW-CMAKE-STARTER-SRC
         src/editor/main.cpp
 )
+set(CMAKE_EXE_LINKER_FLAGS " -static")
 
 include_directories(libs/GLFW/include)
 include_directories(libs/OpenAL/include)
@@ -23,6 +24,7 @@ add_executable(WaifuRPG src/editor/main.cpp
         src/editor/Math/vectors/vector1f.hpp)
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
+target_link_libraries(WaifuRPG -static-libgcc -static-libstdc++)
 target_link_libraries(WaifuRPG Vulkan::Vulkan)
 target_link_libraries(WaifuRPG glfw)
 target_link_libraries(WaifuRPG OpenAL)
