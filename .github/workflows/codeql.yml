@@ -18,6 +18,7 @@ on:
     branches: [main]
     paths-ignore:
     - 'libs/**'
+    - '_vulkan_build/**'
   schedule:
     - cron: '33 20 * * 6'
 
