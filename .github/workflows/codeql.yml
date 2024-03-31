@@ -77,7 +77,7 @@ jobs:
     - name: Install Linux packages
       run: |
         sudo apt-get update
-        sudo apt-get install -qq pkg-config libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-dev libxkbcommon-x11-dev libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev xvfb xdotool libxinerama-dev
+        sudo apt-get install -qq pkg-config libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-dev libxkbcommon-x11-dev libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev xvfb xdotool libxinerama-dev libxi-dev
         # start a virtual frame buffer
         Xvfb :99 -screen 0 1920x1024x24 &
 
