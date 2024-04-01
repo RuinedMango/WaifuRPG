@@ -2,3 +2,4 @@
 /.idea/
 /src/runtimes/android/.idea/
 /src/runtimes/web/.idea/
+/cmake-build-release/
