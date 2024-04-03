@@ -14,23 +14,27 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "TOBJ/tiny_obj_loader.h"
 
-#include <iostream>
-#include <fstream>
-#include <stdexcept>
+#include "Camera.hpp"
+
 #include <algorithm>
-#include <chrono>
-#include <vector>
-#include <cstring>
-#include <cstdlib>
-#include <cstdint>
-#include <limits>
 #include <array>
+#include <chrono>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <limits>
 #include <optional>
 #include <set>
+#include <stdexcept>
 #include <unordered_map>
+#include <vector>
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
+Camera camera = Camera(WIDTH, HEIGHT);
+float_t mouseSens = 0.05;
 
 const std::string MODEL_PATH = "assets/models/viking_room.obj";
 const std::string TEXTURE_PATH = "assets/textures/viking_room.png";
@@ -58,6 +62,32 @@ VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMes
     } else {
         return VK_ERROR_EXTENSION_NOT_PRESENT;
     }
+}
+
+void handleKeys(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if(key == GLFW_KEY_W && action != GLFW_PRESS) {
+        camera.move(camera.FORWARD);
+    }
+    if(key == GLFW_KEY_S && action != GLFW_PRESS) {
+        camera.move(camera.BACKWARD);
+    }
+    if(key == GLFW_KEY_A && action != GLFW_PRESS) {
+        camera.move(camera.LEFT);
+    }
+    if(key == GLFW_KEY_D && action != GLFW_PRESS) {
+        camera.move(camera.RIGHT);
+    }
+    if(key == GLFW_KEY_ESCAPE && action != GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+}
+float oldposx;
+float oldposy;
+void handleMouseMove(GLFWwindow* window, double xpos, double ypos){
+    camera.rotate(oldposx - xpos, camera._up, mouseSens);
+    camera.rotate(oldposy - ypos, glm::vec3(0,1,0), mouseSens);
+    oldposx = xpos;
+    oldposy = ypos;
 }
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -140,6 +170,7 @@ class Application {
 public:
     void run() {
         initWindow();
+        initControls();
         initVulkan();
         mainLoop();
         cleanup();
@@ -219,6 +250,13 @@ private:
         window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+
+    }
+
+    void initControls() {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetKeyCallback(window, handleKeys);
+        glfwSetCursorPosCallback(window, handleMouseMove);
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -1435,7 +1473,7 @@ private:
 
             vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
-            vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 20, 0, 0, 0);
+            vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 5, 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
@@ -1472,9 +1510,9 @@ private:
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
+        ubo.model = glm::mat4(40.0f);
+        ubo.view = camera.getMVP();
+        ubo.proj = glm::perspective(glm::radians(90.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
