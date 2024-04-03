@@ -77,6 +77,12 @@ void handleKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
     if(key == GLFW_KEY_D && action != GLFW_PRESS) {
         camera.move(camera.RIGHT);
     }
+    if(key == GLFW_KEY_SPACE && action != GLFW_PRESS) {
+        camera.move(camera.UP);
+    }
+    if(key == GLFW_KEY_LEFT_SHIFT && action != GLFW_PRESS) {
+        camera.move(camera.DOWN);
+    }
     if(key == GLFW_KEY_ESCAPE && action != GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
