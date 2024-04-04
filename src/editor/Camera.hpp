@@ -28,10 +28,10 @@ public:
     void move(MovementType movement) {
         switch(movement) {
             case FORWARD:
-                _position += _direction * _moveSpeed;
+                _position += glm::normalize(glm::vec3(1,0,0)) * _moveSpeed;
                 break;
             case BACKWARD:
-                _position -= _direction * _moveSpeed;
+                _position -= glm::normalize(glm::vec3(1,0,0)) * _moveSpeed;
                 break;
             case LEFT:
                 _position -= glm::normalize(glm::cross(_direction, _up)) * _moveSpeed;

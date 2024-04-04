@@ -87,14 +87,6 @@ void handleKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 }
-float oldposx;
-float oldposy;
-void handleMouseMove(GLFWwindow* window, double xpos, double ypos){
-    camera.rotate(oldposx - xpos, camera._up, mouseSens);
-    camera.rotate(oldposy - ypos, glm::vec3(0,1,0), mouseSens);
-    oldposx = xpos;
-    oldposy = ypos;
-}
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
     auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -262,7 +254,7 @@ private:
     void initControls() {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetKeyCallback(window, handleKeys);
-        glfwSetCursorPosCallback(window, handleMouseMove);
+        camera.rotate(90, glm::vec3(0,1,0), mouseSens);
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
