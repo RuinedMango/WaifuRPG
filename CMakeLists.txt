@@ -22,7 +22,8 @@ add_executable(WaifuRPG src/editor/main.cpp
         src/utilities/build.cpp
         src/editor/Math/lath.hpp
         src/editor/Math/vectors/vector1f.hpp
-        src/editor/Camera.hpp)
+        src/editor/Camera.hpp
+        src/editor/Window.h)
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 target_link_libraries(WaifuRPG -static-libgcc -static-libstdc++)
