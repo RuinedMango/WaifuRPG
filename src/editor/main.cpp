@@ -187,8 +187,11 @@ private:
 
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorSetLayout uiDescriptorSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+    VkPipelineLayout uiPipelineLayout;
+    VkPipeline uiGraphicsPipeline;
 
     VkCommandPool commandPool;
 
@@ -261,8 +264,10 @@ private:
         createSwapChain();
         createImageViews();
         createRenderPass();
-        createDescriptorSetLayout();
-        createGraphicsPipeline();
+        createDescriptorSetLayout(descriptorSetLayout);
+        createDescriptorSetLayout(uiDescriptorSetLayout);
+        createGraphicsPipeline("assets/shaders/vert.spv", "assets/shaders/frag.spv", pipelineLayout, graphicsPipeline);
+        createGraphicsPipeline("assets/shaders/uiVert.spv", "assets/shaders/uiFrag.spv", uiPipelineLayout, uiGraphicsPipeline);
         createCommandPool();
         createColorResources();
         createDepthResources();
@@ -775,7 +780,7 @@ private:
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+        VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = 1;
         pipelineLayoutInfo.pSetLayouts = &uiDescriptorSetLayout;
