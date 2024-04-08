@@ -1,6 +1,7 @@
 version: 4.3.3
 name: WaifuRPG
 description: Transform your RPG's with WaifuRPG
+theme: jekyll-theme-slate
 url: https://rpg.ruinedmango.com
 repository: https://github.com/RuinedMango/WaifuRPG
 timezone: America/Los_Angeles
