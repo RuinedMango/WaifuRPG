@@ -276,8 +276,8 @@ private:
         createRenderPass();
         createDescriptorSetLayout(descriptorSetLayout);
         createDescriptorSetLayout(uiDescriptorSetLayout);
-        createGraphicsPipeline("assets/shaders/vert.spv", "assets/shaders/frag.spv", pipelineLayout, graphicsPipeline);
-        createGraphicsPipeline("assets/shaders/uiVert.spv", "assets/shaders/uiFrag.spv", uiPipelineLayout, uiGraphicsPipeline);
+        createGraphicsPipeline("assets/shaders/vert.spv", "assets/shaders/frag.spv", pipelineLayout, graphicsPipeline, descriptorSetLayout);
+        createGraphicsPipeline("assets/shaders/uiVert.spv", "assets/shaders/uiFrag.spv", uiPipelineLayout, uiGraphicsPipeline, uiDescriptorSetLayout);
         createCommandPool();
         createColorResources();
         createDepthResources();
@@ -663,7 +663,7 @@ private:
         }
     }
 
-    void createDescriptorSetLayout(VkDescriptorSetLayout& inDescriptorSetLayout) {
+    void createDescriptorSetLayout(VkDescriptorSetLayout &inDescriptorSetLayout) {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
         uboLayoutBinding.descriptorCount = 1;
@@ -696,7 +696,7 @@ private:
         }
     }
 
-    void createGraphicsPipeline(std::string vertShader, std::string fragShader, VkPipelineLayout inPipelineLayout, VkPipeline inGraphicsPipeline) {
+    void createGraphicsPipeline(std::string vertShader, std::string fragShader, VkPipelineLayout inPipelineLayout, VkPipeline inGraphicsPipeline, VkDescriptorSetLayout inDescriptorSetLayout) {
         auto vertShaderCode = readFile(vertShader);
         auto fragShaderCode = readFile(fragShader);
 
@@ -786,16 +786,7 @@ private:
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
-
-        if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &inPipelineLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create pipeline layout!");
-        }
-
-        pipelineLayoutInfo = {};
-        pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &uiDescriptorSetLayout;
+        pipelineLayoutInfo.pSetLayouts = &inDescriptorSetLayout;
 
         if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &inPipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
@@ -1276,8 +1267,7 @@ private:
         }
     }
 
-    void createDescriptorSets(std::vector<VkBuffer> inUniformBuffers, VkImageView inTextureImageView, VkSampler inTextureSampler,
-        std::vector<VkDescriptorSet>& inDescriptorSets, VkDescriptorSetLayout& inDescriptorSetLayout, VkDescriptorPool inDescriptorPool) {
+    void createDescriptorSets(std::vector<VkBuffer> inUniformBuffers, VkImageView inTextureImageView, VkSampler inTextureSampler, std::vector<VkDescriptorSet> &inDescriptorSets, VkDescriptorSetLayout &inDescriptorSetLayout, VkDescriptorPool inDescriptorPool) {
         std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, inDescriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1292,7 +1282,7 @@ private:
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffers[i];
+            bufferInfo.buffer = inUniformBuffers[i];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
@@ -1470,12 +1460,12 @@ private:
         VkBuffer vertexBuffers[] = {vertexBuffer};
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-        VkBuffer uiVertexBuffers[] = { uiVertexBuffer };
-        VkDeviceSize uiOffsets[] = { 0 };
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, uiVertexBuffers, uiOffsets);
+        VkBuffer uiVertexBuffers[] = {uiVertexBuffer};
+        VkDeviceSize uiOffsets[] = {0};
+        vkCmdBindVertexBuffers(commandBuffer, 1, 1, uiVertexBuffers, uiOffsets);
 
         vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-        vkCmdBindIndexBuffer(commandBuffer, uiIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(commandBuffer, uiIndexBuffer, 1, VK_INDEX_TYPE_UINT32);
 
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
