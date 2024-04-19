@@ -186,6 +186,7 @@ private:
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
     VkRenderPass renderPass;
+    VkRenderPass uiRenderPass;
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorSetLayout uiDescriptorSetLayout;
     VkPipelineLayout pipelineLayout;
@@ -1282,7 +1283,7 @@ private:
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = inUniformBuffers[i];
+            bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
@@ -1442,6 +1443,7 @@ private:
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, uiGraphicsPipeline);
+        
 
         VkViewport viewport{};
         viewport.x = 0.0f;
